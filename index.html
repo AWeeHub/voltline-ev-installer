@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOLTLINE — EV Charger Installation · Austin, TX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #0B0B0C; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    img, video { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 56px;
+      transition: background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(11,11,12,0.92);
+      backdrop-filter: blur(24px);
+      padding: 16px 56px;
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+      text-decoration: none; display: flex; align-items: center; gap: 9px;
+    }
+    .nav-bolt { color: #C6FF3D; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.5); text-decoration: none;
+      position: relative; padding-bottom: 3px; transition: color 0.25s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 100%;
+      height: 1px; background: #C6FF3D;
+      transition: right 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { right: 0; }
+    .nav-cta {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #0B0B0C; background: #C6FF3D;
+      padding: 11px 22px; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HAMBURGER ── */
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 5px; z-index: 101; position: relative; }
+    .hamburger span { display: block; width: 22px; height: 1px; background: #fff; transition: all 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px,4px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
+    .mobile-menu { display: none; position: fixed; inset: 0; z-index: 99; background: rgba(11,11,12,0.98); backdrop-filter: blur(28px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: -0.03em; transition: color 0.2s; }
+    .mobile-menu a:hover { color: #fff; }
+    .mobile-menu .m-cta { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: #C6FF3D; color: #0B0B0C; padding: 16px 36px; margin-top: 16px; font-family: 'Inter', sans-serif; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative; height: 100vh; min-height: 720px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 56px 80px; overflow: hidden;
+    }
+    #hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(11,11,12,0.9) 0%, rgba(11,11,12,0.3) 60%, rgba(11,11,12,0.1) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 1100px; }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 32px;
+      opacity: 0; animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    }
+    .hero-eyebrow-line { width: 40px; height: 1px; background: #C6FF3D; flex-shrink: 0; }
+    .hero-eyebrow-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+    .hero-h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(4rem, 10.5vw, 12rem);
+      font-weight: 700; letter-spacing: -0.04em; line-height: 0.9;
+      margin-bottom: 36px;
+    }
+    .line-wrap { overflow: hidden; display: block; }
+    .line-inner {
+      display: block;
+      transform: translateY(110%);
+      animation: lineUp 1s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    .lw1 .line-inner { animation-delay: 0.35s; }
+    .lw2 .line-inner { animation-delay: 0.55s; color: #C6FF3D; }
+    .hero-sub {
+      font-size: clamp(0.85rem, 1.2vw, 0.95rem); font-weight: 400;
+      color: rgba(255,255,255,0.5); max-width: 420px; line-height: 1.75;
+      margin-bottom: 44px;
+      opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.75s forwards;
+    }
+    .hero-btns {
+      display: flex; align-items: center; gap: 20px;
+      opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.9s forwards;
+    }
+    .hero-scroll {
+      position: absolute; right: 56px; bottom: 80px; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 1.1s forwards;
+    }
+    .hero-scroll-label { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); writing-mode: vertical-rl; }
+    .hero-scroll-line { width: 1px; height: 56px; background: rgba(255,255,255,0.15); position: relative; overflow: hidden; }
+    .hero-scroll-line::after { content: ''; position: absolute; inset: 0; background: #C6FF3D; animation: scrollDrop 2s ease-in-out infinite; }
+
+    /* ── BUTTONS ── */
+    .btn-p {
+      position: relative; overflow: hidden;
+      background: #C6FF3D; color: #0B0B0C;
+      padding: 16px 34px; border: none;
+      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: color 0.32s; z-index: 0;
+    }
+    .btn-p::before {
+      content: ''; position: absolute; inset: 0;
+      background: #0B0B0C; transform: scaleX(0); transform-origin: right;
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1); z-index: -1;
+    }
+    .btn-p:hover::before { transform: scaleX(1); transform-origin: left; }
+    .btn-p:hover { color: #C6FF3D; }
+    .btn-g {
+      padding: 15px 28px;
+      border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
+      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      text-decoration: none; display: inline-block;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-g:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    /* ── SECTION KICKER ── */
+    .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .k-num { font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 700; color: #C6FF3D; letter-spacing: 0.05em; }
+    .k-dash { font-size: 0.65rem; color: rgba(255,255,255,0.2); }
+    .k-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .kicker.dark .k-num { color: #0B0B0C; }
+    .kicker.dark .k-dash { color: rgba(0,0,0,0.2); }
+    .kicker.dark .k-label { color: rgba(0,0,0,0.4); }
+
+    /* ── SECTION TITLE ── */
+    .sec-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 5rem); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 1.0; margin-bottom: 64px;
+    }
+    .sec-title.light { color: #0B0B0C; }
+
+    /* ── TRUST BAR ── */
+    #trust {
+      background: #0B0B0C;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 22px 56px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .trust-marks { display: flex; align-items: center; gap: 48px; flex-wrap: wrap; justify-content: center; }
+    .trust-mark { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.22); }
+    .trust-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.1); }
+    .trust-badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .tbadge { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+    .tbadge::before { content: ''; display: block; width: 4px; height: 4px; background: #C6FF3D; border-radius: 50%; flex-shrink: 0; }
+    .t-bar-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.08); }
+
+    /* ── STATS ── */
+    #stats { padding: 100px 56px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .stats-row { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
+    .snum { padding: 0 40px; border-right: 1px solid rgba(255,255,255,0.07); }
+    .snum:first-child { padding-left: 0; }
+    .snum:last-child { border-right: none; padding-right: 0; }
+    .snum-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 5.5rem); font-weight: 700;
+      color: #C6FF3D; letter-spacing: -0.04em; line-height: 1;
+    }
+    .snum-lbl { font-size: 0.72rem; color: rgba(255,255,255,0.35); font-weight: 500; margin-top: 8px; letter-spacing: 0.02em; }
+
+    /* ── SERVICES ── */
+    #services { padding: 120px 56px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; max-width: 1200px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.08); }
+    .svc-card { padding: 44px; background: #0B0B0C; position: relative; transition: background 0.35s ease; }
+    .svc-card:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.08); }
+    .svc-card:hover { background: rgba(255,255,255,0.03); }
+    .svc-num { font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.18); letter-spacing: 0.1em; margin-bottom: 40px; display: block; }
+    .svc-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
+    .svc-copy { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 36px; }
+    .svc-cta {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      position: relative; padding-bottom: 2px; transition: color 0.25s;
+    }
+    .svc-cta::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 100%;
+      height: 1px; background: #C6FF3D;
+      transition: right 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .svc-cta:hover { color: #C6FF3D; }
+    .svc-cta:hover::after { right: 0; }
+
+    /* ── PROCESS (OFF-WHITE) ── */
+    #process { padding: 120px 56px; background: #F4F2ED; }
+    .track-outer { max-width: 1200px; margin: 0 auto; position: relative; }
+    .track-line { position: absolute; top: 18px; left: 12.5%; right: 12.5%; height: 1px; background: rgba(0,0,0,0.1); }
+    .track-fill { position: absolute; top: 18px; left: 12.5%; height: 1px; background: #0B0B0C; width: 0; transition: width 1.4s cubic-bezier(0.16,1,0.3,1); }
+    .track-wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; position: relative; z-index: 1; }
+    .step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 12px; }
+    .step-node {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 700;
+      color: rgba(0,0,0,0.3); margin-bottom: 24px;
+      transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+      background: #F4F2ED;
+    }
+    .step-node.lit { background: #0B0B0C; border-color: #0B0B0C; color: #C6FF3D; }
+    .step-name { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: #0B0B0C; margin-bottom: 10px; letter-spacing: -0.01em; }
+    .step-copy { font-size: 0.82rem; color: rgba(0,0,0,0.5); line-height: 1.75; }
+
+    /* ── PORTFOLIO ── */
+    #portfolio { padding: 120px 56px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .port-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 1200px; margin: 0 auto; }
+    .cs-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); overflow: hidden; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s ease; }
+    .cs-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.14); }
+    .cs-feat { grid-column: span 2; }
+    .cs-img-wrap { position: relative; overflow: hidden; }
+    .cs-feat .cs-img-wrap { height: 340px; }
+    .cs-card:not(.cs-feat) .cs-img-wrap { height: 210px; }
+    .cs-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .cs-card:hover .cs-img-wrap img { transform: scale(1.05); }
+    .cs-tag {
+      position: absolute; top: 16px; left: 16px;
+      background: #C6FF3D; color: #0B0B0C;
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 5px 10px;
+    }
+    .cs-body { padding: 28px; }
+    .cs-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; gap: 12px; }
+    .cs-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+    .cs-loc { font-size: 0.68rem; color: rgba(255,255,255,0.3); white-space: nowrap; padding-top: 3px; }
+    .cs-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 18px; }
+    .cs-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); padding: 12px; }
+    .cs-sv { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: #C6FF3D; }
+    .cs-sl { font-size: 0.62rem; color: rgba(255,255,255,0.35); margin-top: 3px; letter-spacing: 0.03em; }
+    .cs-desc { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.75; }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { padding: 120px 56px; background: #0B0B0C; border-top: 1px solid rgba(255,255,255,0.06); }
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; max-width: 1200px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.07); }
+    .tcard { padding: 44px; background: #0B0B0C; display: flex; flex-direction: column; transition: background 0.3s ease; }
+    .tcard:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.07); }
+    .tcard:hover { background: rgba(255,255,255,0.02); }
+    .tqmark { font-family: 'Space Grotesk', sans-serif; font-size: 6rem; line-height: 0.5; color: #C6FF3D; opacity: 0.15; display: block; margin-bottom: 24px; }
+    .tstars { color: #C6FF3D; font-size: 0.72rem; letter-spacing: 4px; margin-bottom: 18px; }
+    .tquote { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.82; margin-bottom: 32px; flex: 1; font-style: italic; }
+    .tfoot { display: flex; align-items: center; gap: 14px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .tavatar { width: 36px; height: 36px; flex-shrink: 0; background: rgba(198,255,61,0.08); border: 1px solid rgba(198,255,61,0.15); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.72rem; color: #C6FF3D; }
+    .tname { font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: -0.01em; }
+    .tmeta { font-size: 0.68rem; color: rgba(255,255,255,0.3); margin-top: 2px; }
+
+    /* ── QUOTE FORM ── */
+    /* ── MODAL ── */
+    #modal-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0); backdrop-filter: blur(0px); pointer-events: none; transition: background 0.35s ease, backdrop-filter 0.35s ease; }
+    #modal-overlay.active { background: rgba(0,0,0,0.78); backdrop-filter: blur(16px); pointer-events: all; }
+    #modal-card { background: #fff; width: 100%; max-width: 540px; padding: 52px 52px 44px; position: relative; transform: translateY(24px) scale(0.97); opacity: 0; transition: transform 0.42s cubic-bezier(0.16,1,0.3,1), opacity 0.42s cubic-bezier(0.16,1,0.3,1); max-height: 90vh; overflow-y: auto; }
+    #modal-overlay.active #modal-card { transform: translateY(0) scale(1); opacity: 1; }
+    .m-close { position: absolute; top: 22px; right: 22px; background: none; border: none; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.28); font-size: 1rem; transition: color 0.2s; line-height: 1; }
+    .m-close:hover { color: #0B0B0C; }
+    .m-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 44px; }
+    .m-progress { display: flex; gap: 4px; flex: 1; margin-right: 20px; }
+    .m-progress-seg { height: 2px; flex: 1; background: rgba(0,0,0,0.1); transition: background 0.35s ease; }
+    .m-progress-seg.done { background: #0B0B0C; }
+    .m-progress-seg.active { background: #C6FF3D; }
+    .m-step-count { font-family: 'Space Grotesk', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; color: rgba(0,0,0,0.25); white-space: nowrap; }
+    .m-step { display: none; }
+    .m-step.active { display: block; animation: mStepIn 0.32s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes mStepIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+    .m-q { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 700; letter-spacing: -0.035em; color: #0B0B0C; line-height: 1.15; margin-bottom: 10px; }
+    .m-hint { font-size: 0.82rem; color: rgba(0,0,0,0.38); line-height: 1.6; margin-bottom: 34px; }
+    .m-options { display: flex; flex-direction: column; gap: 8px; }
+    .m-opt { display: flex; align-items: center; gap: 20px; padding: 18px 22px; border: 1px solid rgba(0,0,0,0.11); cursor: pointer; text-align: left; background: #fff; transition: border-color 0.2s, background 0.2s; }
+    .m-opt:hover { border-color: #0B0B0C; background: rgba(0,0,0,0.02); }
+    .m-opt.selected { border-color: #0B0B0C; background: #0B0B0C; }
+    .m-opt-key { font-family: 'Space Grotesk', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; color: rgba(0,0,0,0.22); min-width: 16px; flex-shrink: 0; transition: color 0.2s; }
+    .m-opt.selected .m-opt-key { color: rgba(198,255,61,0.5); }
+    .m-opt-text { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: #0B0B0C; line-height: 1.3; transition: color 0.2s; }
+    .m-opt.selected .m-opt-text { color: #fff; }
+    .m-field { margin-bottom: 14px; }
+    .m-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(0,0,0,0.3); margin-bottom: 9px; display: block; }
+    .m-input { width: 100%; border: 1px solid rgba(0,0,0,0.13); padding: 16px 18px; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #0B0B0C; background: #fff; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+    .m-input:focus { border-color: #0B0B0C; }
+    .m-input::placeholder { color: rgba(0,0,0,0.22); }
+    .m-frow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .m-actions { margin-top: 32px; }
+    .m-next { width: 100%; padding: 18px; background: #0B0B0C; color: #C6FF3D; border: none; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+    .m-next:hover { opacity: 0.82; }
+    .m-back { background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: rgba(0,0,0,0.3); cursor: pointer; padding: 10px 0 0; letter-spacing: 0.08em; text-transform: uppercase; display: block; transition: color 0.2s; }
+    .m-back:hover { color: #0B0B0C; }
+    #m-confirm { display: none; text-align: center; padding: 12px 0 8px; }
+    #m-confirm.active { display: block; animation: mStepIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .m-check { width: 56px; height: 56px; background: #C6FF3D; display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; font-size: 1.3rem; }
+    .m-confirm-h { font-family: 'Space Grotesk', sans-serif; font-size: 1.9rem; font-weight: 700; letter-spacing: -0.04em; color: #0B0B0C; margin-bottom: 14px; line-height: 1.1; }
+    .m-confirm-p { font-size: 0.86rem; color: rgba(0,0,0,0.42); line-height: 1.78; max-width: 320px; margin: 0 auto 24px; }
+    .m-confirm-meta { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(0,0,0,0.2); margin-bottom: 32px; }
+    .m-confirm-close { background: none; border: none; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 2px 0; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(0,0,0,0.35); cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+    .m-confirm-close:hover { color: #0B0B0C; border-color: #0B0B0C; }
+
+    /* ── FAQ (OFF-WHITE) ── */
+    #faq { padding: 120px 56px; background: #F4F2ED; }
+    .faq-wrap { max-width: 800px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .faq-item:first-child { border-top: 1px solid rgba(0,0,0,0.1); }
+    .faq-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 26px 0; background: none; border: none; cursor: pointer; text-align: left; gap: 20px; }
+    .faq-q { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: #0B0B0C; letter-spacing: -0.01em; }
+    .faq-icon { width: 28px; height: 28px; border: 1px solid rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem; color: rgba(0,0,0,0.4); transition: all 0.3s ease; }
+    .faq-item.open .faq-icon { background: #0B0B0C; border-color: #0B0B0C; color: #C6FF3D; transform: rotate(45deg); }
+    .faq-ans { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; font-size: 0.88rem; color: rgba(0,0,0,0.55); line-height: 1.82; }
+    .faq-item.open .faq-ans { max-height: 220px; padding-bottom: 26px; }
+
+    /* ── CTA STRIP ── */
+    #cta-strip { padding: 120px 56px; background: #0B0B0C; border-top: 1px solid rgba(255,255,255,0.06); overflow: hidden; }
+    .cta-inner { max-width: 1200px; margin: 0 auto; }
+    .cta-pre { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; }
+    .cta-pre-line { width: 32px; height: 1px; background: #C6FF3D; flex-shrink: 0; }
+    .cta-pre-text { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .cta-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 8vw, 9.5rem); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 0.88; text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+    .cta-h .lime { color: #C6FF3D; }
+    .cta-h .dim { color: rgba(255,255,255,0.18); }
+
+    /* ── FOOTER ── */
+    footer { padding: 80px 56px 48px; border-top: 1px solid rgba(255,255,255,0.06); background: #060607; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 64px; gap: 40px; }
+    .footer-logo { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+    .footer-tagline { font-size: 0.75rem; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+    .footer-addr { font-size: 0.7rem; color: rgba(255,255,255,0.18); line-height: 1.6; }
+    .footer-nav { display: flex; gap: 64px; }
+    .fnav-col h4 { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.22); margin-bottom: 20px; }
+    .fnav-col a { display: block; font-size: 0.78rem; color: rgba(255,255,255,0.4); text-decoration: none; margin-bottom: 12px; transition: color 0.2s; }
+    .fnav-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.68rem; color: rgba(255,255,255,0.18); }
+
+    /* ── SCROLL TO TOP ── */
+    #stb { position: fixed; bottom: 32px; right: 32px; z-index: 50; width: 42px; height: 42px; background: #C6FF3D; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; font-size: 0.9rem; color: #0B0B0C; font-weight: 700; }
+    #stb.show { opacity: 1; transform: translateY(0); }
+    #stb:hover { background: #b5f020; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+
+    /* ── KEYFRAMES ── */
+    @keyframes lineUp { from { transform: translateY(110%); } to { transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+    @keyframes scrollDrop { 0%{transform:translateY(-100%);} 100%{transform:translateY(100%);} }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1080px) {
+      .quote-inner { grid-template-columns: 1fr; gap: 48px; }
+    }
+    @media (max-width: 960px) {
+      #nav { padding: 16px 24px; }
+      #nav.scrolled { padding: 13px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      #hero { padding: 0 24px 60px; }
+      .hero-scroll { right: 24px; bottom: 60px; }
+      #trust { padding: 20px 24px; gap: 12px; }
+      .trust-marks { gap: 16px 20px; }
+      .trust-mark { font-size: 0.6rem; letter-spacing: 0.1em; }
+      .trust-sep { display: none; }
+      #stats { padding: 64px 24px; }
+      .stats-row { grid-template-columns: repeat(2,1fr); gap: 36px; }
+      .snum { border-right: none; padding: 0; }
+      #services, #portfolio, #testimonials, #cta-strip { padding: 80px 24px; }
+      #process, #faq { padding: 80px 24px; }
+      footer { padding: 56px 24px 36px; }
+      .svc-grid { grid-template-columns: 1fr; }
+      .svc-card:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .track-wrap { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .track-line, .track-fill { display: none; }
+      .step { align-items: flex-start; text-align: left; padding: 0; }
+      .port-grid { grid-template-columns: 1fr; }
+      .cs-feat { grid-column: span 1; }
+      .cs-feat .cs-img-wrap { height: 240px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .tcard:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .m-frow { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; }
+      .footer-nav { gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+      .cta-h { font-size: clamp(2.4rem, 10vw, 5rem); }
+    }
+    @media (max-width: 540px) {
+      .track-wrap { grid-template-columns: 1fr; }
+      .hero-btns { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+    @media (hover:none) and (max-width:768px) {
+      #hero-video { display: none; }
+      #hero { background: url('https://images.pexels.com/videos/9790134/pexels-photo-9790134.jpeg') center/cover no-repeat; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .reveal { transition:none; opacity:1; transform:none; }
+      .line-inner { animation:none; transform:none; }
+      .hero-eyebrow, .hero-sub, .hero-btns, .hero-scroll { animation:none; opacity:1; }
+      .btn-p::before { transition:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo"><span class="nav-bolt">⚡</span> VOLTLINE</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#portfolio">Our Work</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#" class="nav-cta" onclick="openModal(); return false;">Get a Free Quote</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#process" onclick="toggleMenu()">How It Works</a>
+  <a href="#portfolio" onclick="toggleMenu()">Our Work</a>
+  <a href="#faq" onclick="toggleMenu()">FAQ</a>
+  <a href="#" class="m-cta" onclick="toggleMenu(); openModal(); return false;">Get My Free Quote →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <video id="hero-video" autoplay muted loop playsinline
+    poster="https://images.pexels.com/videos/9790134/pexels-photo-9790134.jpeg">
+    <source src="https://videos.pexels.com/video-files/9790134/9790134-hd_1920_1080_30fps.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-line"></span>
+      <span class="hero-eyebrow-text">EV Installation · Austin, TX</span>
+    </div>
+    <h1 class="hero-h1">
+      <span class="line-wrap lw1"><span class="line-inner">YOUR DRIVEWAY.</span></span>
+      <span class="line-wrap lw2"><span class="line-inner">YOUR POWER.</span></span>
+    </h1>
+    <p class="hero-sub">Premium EV charger installation for homes and businesses. Licensed, insured, and up and running in a day.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-p" onclick="openModal(); return false;">Get My Free Quote →</a>
+      <a href="#portfolio" class="btn-g">See Our Work</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="hero-scroll-label">Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div id="trust">
+  <div class="trust-marks">
+    <span class="trust-mark">Tesla Certified</span>
+    <span class="trust-sep"></span>
+    <span class="trust-mark">ChargePoint Partner</span>
+    <span class="trust-sep"></span>
+    <span class="trust-mark">JuiceBox Pro</span>
+    <span class="trust-sep"></span>
+    <span class="trust-mark">NECA Member</span>
+    <span class="trust-sep"></span>
+    <span class="trust-mark">Eaton Authorized</span>
+  </div>
+  <div class="trust-badges">
+    <span class="tbadge">Certified Installers</span>
+    <span class="t-bar-sep"></span>
+    <span class="tbadge">Licensed &amp; Insured</span>
+    <span class="t-bar-sep"></span>
+    <span class="tbadge">25-Year Workmanship Warranty</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-row">
+    <div class="snum reveal d1">
+      <div class="snum-val">500+</div>
+      <div class="snum-lbl">Installations completed</div>
+    </div>
+    <div class="snum reveal d2">
+      <div class="snum-val">4.9★</div>
+      <div class="snum-lbl">Average customer rating</div>
+    </div>
+    <div class="snum reveal d3">
+      <div class="snum-val">&lt;6 hrs</div>
+      <div class="snum-lbl">Average home install time</div>
+    </div>
+    <div class="snum reveal d4">
+      <div class="snum-val">25 yr</div>
+      <div class="snum-lbl">Workmanship warranty</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="kicker reveal">
+    <span class="k-num">01</span>
+    <span class="k-dash">—</span>
+    <span class="k-label">Services</span>
+  </div>
+  <h2 class="sec-title reveal">The right charge,<br>for every property.</h2>
+  <div class="svc-grid">
+    <div class="svc-card reveal d1">
+      <span class="svc-num">01</span>
+      <h3 class="svc-name">Home Charging</h3>
+      <p class="svc-copy">Level 2 home chargers installed in a single day. Compatible with Tesla, Rivian, Ford, GM, and every major EV on the market.</p>
+      <a href="#" class="svc-cta" onclick="openModal(); return false;">Get a quote →</a>
+    </div>
+    <div class="svc-card reveal d2">
+      <span class="svc-num">02</span>
+      <h3 class="svc-name">Commercial &amp; Fleet</h3>
+      <p class="svc-copy">Multi-unit commercial deployments with centralized load management, per-stall billing, and 24/7 network monitoring.</p>
+      <a href="#" class="svc-cta" onclick="openModal(); return false;">Get a site assessment →</a>
+    </div>
+    <div class="svc-card reveal d3">
+      <span class="svc-num">03</span>
+      <h3 class="svc-name">Panel Upgrades</h3>
+      <p class="svc-copy">100A → 200A upgrades, EV-ready circuits, and load calculations. Fully permitted and future-proofed for your next EV.</p>
+      <a href="#" class="svc-cta" onclick="openModal(); return false;">Start with an assessment →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="kicker dark reveal">
+    <span class="k-num">02</span>
+    <span class="k-dash">—</span>
+    <span class="k-label">How It Works</span>
+  </div>
+  <h2 class="sec-title light reveal">From call to charged<br>in four steps.</h2>
+  <div class="track-outer">
+    <div class="track-line"></div>
+    <div class="track-fill" id="track-fill"></div>
+    <div class="track-wrap" id="track-wrap">
+      <div class="step reveal d1">
+        <div class="step-node" id="node-1">01</div>
+        <h3 class="step-name">Free Assessment</h3>
+        <p class="step-copy">We visit your property, assess your electrical setup, and map the cleanest installation path.</p>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-node" id="node-2">02</div>
+        <h3 class="step-name">Custom Quote</h3>
+        <p class="step-copy">A transparent, itemized quote within 24 hours. No guesswork. No hidden fees.</p>
+      </div>
+      <div class="step reveal d3">
+        <div class="step-node" id="node-3">03</div>
+        <h3 class="step-name">Pro Install</h3>
+        <p class="step-copy">Our certified team handles permits, wiring, and mounting — cleanly and on schedule.</p>
+      </div>
+      <div class="step reveal d4">
+        <div class="step-node" id="node-4">04</div>
+        <h3 class="step-name">Power On</h3>
+        <p class="step-copy">Flip the switch. Walk through the system with your technician. Your first charge is on us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="kicker reveal">
+    <span class="k-num">03</span>
+    <span class="k-dash">—</span>
+    <span class="k-label">Our Work</span>
+  </div>
+  <h2 class="sec-title reveal">Real installs.<br>Real results.</h2>
+  <div class="port-grid">
+    <div class="cs-card cs-feat reveal d1">
+      <div class="cs-img-wrap">
+        <img src="https://images.pexels.com/photos/27355835/pexels-photo-27355835.jpeg?auto=compress&cs=tinysrgb&w=1200&h=700&fit=crop" alt="Highland Park Residence">
+        <span class="cs-tag">Home Charging</span>
+      </div>
+      <div class="cs-body">
+        <div class="cs-meta">
+          <span class="cs-name">Highland Park Residence</span>
+          <span class="cs-loc">Austin, TX</span>
+        </div>
+        <div class="cs-stats">
+          <div class="cs-stat"><div class="cs-sv">1 day</div><div class="cs-sl">Install time</div></div>
+          <div class="cs-stat"><div class="cs-sv">2 units</div><div class="cs-sl">Chargers</div></div>
+          <div class="cs-stat"><div class="cs-sv">23 kW</div><div class="cs-sl">Total capacity</div></div>
+        </div>
+        <p class="cs-desc">Dual-car garage retrofit with two JuiceBox Pro 48s and a smart load-sharing hub. 200A panel upgrade completed in the same visit — one crew, one day.</p>
+      </div>
+    </div>
+    <div class="cs-card reveal d2">
+      <div class="cs-img-wrap">
+        <img src="https://images.pexels.com/photos/9800000/pexels-photo-9800000.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Frost Bank Tower">
+        <span class="cs-tag">Commercial</span>
+      </div>
+      <div class="cs-body">
+        <div class="cs-meta">
+          <span class="cs-name">Frost Bank Tower</span>
+          <span class="cs-loc">Downtown Austin, TX</span>
+        </div>
+        <div class="cs-stats">
+          <div class="cs-stat"><div class="cs-sv">3 days</div><div class="cs-sl">Install time</div></div>
+          <div class="cs-stat"><div class="cs-sv">24 bays</div><div class="cs-sl">Stalls</div></div>
+          <div class="cs-stat"><div class="cs-sv">150 kW</div><div class="cs-sl">Capacity</div></div>
+        </div>
+        <p class="cs-desc">3-level commercial deployment with centralized load management and per-stall tenant billing.</p>
+      </div>
+    </div>
+    <div class="cs-card reveal d3">
+      <div class="cs-img-wrap">
+        <img src="https://images.pexels.com/photos/2480315/pexels-photo-2480315.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Barton Hills Modern">
+        <span class="cs-tag">Home Charging</span>
+      </div>
+      <div class="cs-body">
+        <div class="cs-meta">
+          <span class="cs-name">Barton Hills Modern</span>
+          <span class="cs-loc">Barton Hills, TX</span>
+        </div>
+        <div class="cs-stats">
+          <div class="cs-stat"><div class="cs-sv">4 hrs</div><div class="cs-sl">Install time</div></div>
+          <div class="cs-stat"><div class="cs-sv">Tesla WC</div><div class="cs-sl">Charger</div></div>
+          <div class="cs-stat"><div class="cs-sv">11.5 kW</div><div class="cs-sl">Capacity</div></div>
+        </div>
+        <p class="cs-desc">Clean wall-mount Tesla Wall Connector on a dedicated 60A circuit, zero exposed conduit.</p>
+      </div>
+    </div>
+    <div class="cs-card reveal d2">
+      <div class="cs-img-wrap">
+        <img src="https://images.pexels.com/photos/29566904/pexels-photo-29566904.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Fleet Hub">
+        <span class="cs-tag">Fleet</span>
+      </div>
+      <div class="cs-body">
+        <div class="cs-meta">
+          <span class="cs-name">Austin Fleet Hub</span>
+          <span class="cs-loc">North Austin, TX</span>
+        </div>
+        <div class="cs-stats">
+          <div class="cs-stat"><div class="cs-sv">5 days</div><div class="cs-sl">Install time</div></div>
+          <div class="cs-stat"><div class="cs-sv">40 ports</div><div class="cs-sl">Charging ports</div></div>
+          <div class="cs-stat"><div class="cs-sv">480 kW</div><div class="cs-sl">Capacity</div></div>
+        </div>
+        <p class="cs-desc">Full DC fast-charge fleet depot for a last-mile delivery operator. Load balancing across 4 circuits.</p>
+      </div>
+    </div>
+    <div class="cs-card reveal d3">
+      <div class="cs-img-wrap">
+        <img src="https://images.pexels.com/photos/5391511/pexels-photo-5391511.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Panel Upgrade">
+        <span class="cs-tag">Panel Upgrade</span>
+      </div>
+      <div class="cs-body">
+        <div class="cs-meta">
+          <span class="cs-name">Tarrytown Brownstone</span>
+          <span class="cs-loc">Tarrytown, TX</span>
+        </div>
+        <div class="cs-stats">
+          <div class="cs-stat"><div class="cs-sv">6 hrs</div><div class="cs-sl">Install time</div></div>
+          <div class="cs-stat"><div class="cs-sv">200A</div><div class="cs-sl">New panel</div></div>
+          <div class="cs-stat"><div class="cs-sv">EV-ready</div><div class="cs-sl">Future-proof</div></div>
+        </div>
+        <p class="cs-desc">100A → 200A panel upgrade in a 1960s build, fully permitted, to support EV charging.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="kicker reveal">
+    <span class="k-num">04</span>
+    <span class="k-dash">—</span>
+    <span class="k-label">What Clients Say</span>
+  </div>
+  <h2 class="sec-title reveal">Trusted across Texas.</h2>
+  <div class="testi-grid">
+    <div class="tcard reveal d1">
+      <span class="tqmark">"</span>
+      <div class="tstars">★★★★★</div>
+      <p class="tquote">Voltline made the whole thing effortless. They handled the permit, installed in under 4 hours, and walked me through everything before they left. My Tesla charges overnight with no issues.</p>
+      <div class="tfoot">
+        <div class="tavatar">MR</div>
+        <div>
+          <div class="tname">Marcus R.</div>
+          <div class="tmeta">Model 3 owner · Highland Park</div>
+        </div>
+      </div>
+    </div>
+    <div class="tcard reveal d2">
+      <span class="tqmark">"</span>
+      <div class="tstars">★★★★★</div>
+      <p class="tquote">We needed 24 charging bays ready for our tenant launch in three days. Voltline delivered every single one. The load management setup has run flawlessly for six months straight.</p>
+      <div class="tfoot">
+        <div class="tavatar">SL</div>
+        <div>
+          <div class="tname">Sarah L.</div>
+          <div class="tmeta">Property Manager · Frost Bank Tower</div>
+        </div>
+      </div>
+    </div>
+    <div class="tcard reveal d3">
+      <span class="tqmark">"</span>
+      <div class="tstars">★★★★★</div>
+      <p class="tquote">Our panel was undersized and I had no idea where to start. Voltline's tech explained everything clearly, quoted me the same day, and the upgrade was done before lunch. Highly recommend.</p>
+      <div class="tfoot">
+        <div class="tavatar">DJ</div>
+        <div>
+          <div class="tname">David J.</div>
+          <div class="tmeta">Rivian R1T owner · Tarrytown</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="kicker dark reveal">
+    <span class="k-num">05</span>
+    <span class="k-dash">—</span>
+    <span class="k-label">FAQ</span>
+  </div>
+  <h2 class="sec-title light reveal" style="max-width:560px;">Questions we hear<br>all the time.</h2>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFAQ(this)">
+        <span class="faq-q">How long does installation take?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Most residential Level 2 installations are completed in under 6 hours. Commercial deployments vary by site — we'll give you an accurate timeline during your free assessment.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFAQ(this)">
+        <span class="faq-q">Which EV brands are compatible?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">All of them. We install chargers compatible with Tesla (NACS), Rivian, Ford, GM, BMW, Hyundai, Kia, and every major EV — including universal J1772 adapters.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFAQ(this)">
+        <span class="faq-q">Do I need a permit?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Yes, in most Austin jurisdictions an electrical permit is required. We handle all permitting on your behalf — it's included in every install quote at no additional charge.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFAQ(this)">
+        <span class="faq-q">What's covered under the 25-year warranty?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Our 25-year workmanship warranty covers all electrical work performed by our team — wiring, conduit, mounting, and panel connections. Charger hardware is covered by the manufacturer's warranty.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<div id="cta-strip">
+  <div class="cta-inner">
+    <div class="cta-pre reveal">
+      <span class="cta-pre-line"></span>
+      <span class="cta-pre-text">Ready to Plug In?</span>
+    </div>
+    <h2 class="cta-h reveal">THE BEST TIME<br>TO INSTALL WAS<br><span class="dim">DAY ONE.</span><br><span class="lime">NOW IS SECOND.</span></h2>
+    <a href="#" class="btn-p reveal" onclick="openModal(); return false;">Get My Free Quote →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#" class="footer-logo">⚡ VOLTLINE</a>
+      <p class="footer-tagline">Charge at home. Powered for life.</p>
+      <p class="footer-addr">2400 Nueces St, Austin, TX 78705<br>hello@voltline.co · (512) 555-0200</p>
+    </div>
+    <nav class="footer-nav">
+      <div class="fnav-col">
+        <h4>Services</h4>
+        <a href="#services">Home Charging</a>
+        <a href="#services">Commercial &amp; Fleet</a>
+        <a href="#services">Panel Upgrades</a>
+      </div>
+      <div class="fnav-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Certifications</a>
+        <a href="#" onclick="openModal(); return false;">Get a Quote</a>
+      </div>
+      <div class="fnav-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Warranty</a>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 VOLTLINE. All rights reserved.</span>
+    <span>Charge at home. Powered for life.</span>
+  </div>
+</footer>
+
+<button id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<!-- QUALIFICATION MODAL -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-label="Get a free quote" onclick="if(event.target===this)closeModal()">
+  <div id="modal-card">
+    <button class="m-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="m-header">
+      <div class="m-progress" id="m-progress"></div>
+      <span class="m-step-count" id="m-step-count">01 / 06</span>
+    </div>
+
+    <!-- Step 1: Property Type -->
+    <div class="m-step active" id="m-step-1">
+      <h2 class="m-q">What type of property?</h2>
+      <p class="m-hint">Helps us match you with the right install team.</p>
+      <div class="m-options">
+        <button class="m-opt" onclick="handleAnswer('propertyType','residential',2,this)">
+          <span class="m-opt-key">A</span>
+          <span class="m-opt-text">Home / Residential</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('propertyType','commercial',2,this)">
+          <span class="m-opt-key">B</span>
+          <span class="m-opt-text">Commercial / Business</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Own EV? -->
+    <div class="m-step" id="m-step-2">
+      <h2 class="m-q">Do you own an EV?</h2>
+      <p class="m-hint">No EV yet? We still set you up — ready to charge from day one.</p>
+      <div class="m-options">
+        <button class="m-opt" onclick="handleAnswer('ownsEV','yes',3,this)">
+          <span class="m-opt-key">A</span>
+          <span class="m-opt-text">Yes, I drive one now</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('ownsEV','ordering_soon',3,this)">
+          <span class="m-opt-key">B</span>
+          <span class="m-opt-text">Ordering one soon</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('ownsEV','no',3,this)">
+          <span class="m-opt-key">C</span>
+          <span class="m-opt-text">Not yet, just exploring</span>
+        </button>
+      </div>
+      <button class="m-back" onclick="goToStep(1)">← Back</button>
+    </div>
+
+    <!-- Step 3: Has Charger? -->
+    <div class="m-step" id="m-step-3">
+      <h2 class="m-q">Do you have a charger?</h2>
+      <p class="m-hint">Existing chargers may need upgrading or relocating.</p>
+      <div class="m-options">
+        <button class="m-opt" onclick="handleAnswer('hasCharger','yes',4,this)">
+          <span class="m-opt-key">A</span>
+          <span class="m-opt-text">Yes, already have one</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('hasCharger','no',4,this)">
+          <span class="m-opt-key">B</span>
+          <span class="m-opt-text">No, need a new one</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('hasCharger','not_sure',4,this)">
+          <span class="m-opt-key">C</span>
+          <span class="m-opt-text">Not sure</span>
+        </button>
+      </div>
+      <button class="m-back" onclick="goToStep(2)">← Back</button>
+    </div>
+
+    <!-- Step 4: Install Location -->
+    <div class="m-step" id="m-step-4">
+      <h2 class="m-q">Where will it be installed?</h2>
+      <p class="m-hint">Helps us plan panel access and conduit routing.</p>
+      <div class="m-options">
+        <button class="m-opt" onclick="handleAnswer('installLocation','garage',5,this)">
+          <span class="m-opt-key">A</span>
+          <span class="m-opt-text">Garage</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('installLocation','driveway',5,this)">
+          <span class="m-opt-key">B</span>
+          <span class="m-opt-text">Driveway / Exterior wall</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('installLocation','parking_lot',5,this)">
+          <span class="m-opt-key">C</span>
+          <span class="m-opt-text">Parking lot / Shared facility</span>
+        </button>
+        <button class="m-opt" onclick="handleAnswer('installLocation','other',5,this)">
+          <span class="m-opt-key">D</span>
+          <span class="m-opt-text">Other / Not sure</span>
+        </button>
+      </div>
+      <button class="m-back" onclick="goToStep(3)">← Back</button>
+    </div>
+
+    <!-- Step 5: Address -->
+    <div class="m-step" id="m-step-5">
+      <h2 class="m-q">Property address</h2>
+      <p class="m-hint">We use this to check permit requirements and local utility rates.</p>
+      <div class="m-field">
+        <label class="m-label" for="m-address">Street address</label>
+        <input class="m-input" type="text" id="m-address" placeholder="123 Oak St, Austin, TX 78701" autocomplete="street-address">
+      </div>
+      <div class="m-actions">
+        <button class="m-next" onclick="advanceFromAddress()">Continue →</button>
+        <button class="m-back" onclick="goToStep(4)">← Back</button>
+      </div>
+    </div>
+
+    <!-- Step 6: Contact -->
+    <div class="m-step" id="m-step-6">
+      <h2 class="m-q">Last step — your details</h2>
+      <p class="m-hint">We'll send your free quote here within 24 hours.</p>
+      <div class="m-frow">
+        <div class="m-field">
+          <label class="m-label" for="m-name">Full name</label>
+          <input class="m-input" type="text" id="m-name" placeholder="Jane Smith" autocomplete="name">
+        </div>
+        <div class="m-field">
+          <label class="m-label" for="m-email">Email</label>
+          <input class="m-input" type="email" id="m-email" placeholder="jane@example.com" autocomplete="email">
+        </div>
+      </div>
+      <div class="m-field">
+        <label class="m-label" for="m-phone">Phone</label>
+        <input class="m-input" type="tel" id="m-phone" placeholder="(512) 555-0100" autocomplete="tel">
+      </div>
+      <div class="m-actions">
+        <button class="m-next" onclick="submitModalForm()">Get My Free Quote →</button>
+        <button class="m-back" onclick="goToStep(5)">← Back</button>
+      </div>
+    </div>
+
+    <!-- Confirmation -->
+    <div id="m-confirm">
+      <div class="m-check">⚡</div>
+      <h2 class="m-confirm-h">You're on the list.</h2>
+      <p class="m-confirm-p">Your quote is being prepared. Expect a reply within 24 hours — usually much sooner.</p>
+      <p class="m-confirm-meta">VOLTLINE · Austin, TX</p>
+      <button class="m-confirm-close" onclick="closeModal()">Close this window</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const nav = document.getElementById('nav');
+  const stb = document.getElementById('stb');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', scrollY > 50);
+    stb.classList.toggle('show', scrollY > 500);
+  }, { passive: true });
+
+  function toggleMenu() {
+    const h = document.getElementById('hamburger');
+    const m = document.getElementById('mobile-menu');
+    h.classList.toggle('open');
+    m.classList.toggle('open');
+    document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+  }
+
+  /* ── MODAL ── */
+  const mData = {
+    propertyType: '', ownsEV: '', hasCharger: '', installLocation: '',
+    address: '', name: '', email: '', phone: '',
+    submittedAt: '', source: 'voltline-web',
+    sessionId: Math.random().toString(36).slice(2,10)
+  };
+  let mCurrentStep = 1;
+  const M_TOTAL = 6;
+
+  function openModal() {
+    document.getElementById('modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    goToStep(1);
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(resetModal, 420);
+  }
+
+  function resetModal() {
+    ['propertyType','ownsEV','hasCharger','installLocation','address','name','email','phone','submittedAt'].forEach(k => mData[k] = '');
+    ['m-address','m-name','m-email','m-phone'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    document.querySelectorAll('.m-opt').forEach(o => o.classList.remove('selected'));
+    document.getElementById('m-confirm').classList.remove('active');
+    goToStep(1, false);
+  }
+
+  function goToStep(n, animate) {
+    document.querySelectorAll('.m-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('m-confirm').classList.remove('active');
+    const step = document.getElementById('m-step-' + n);
+    if (step) { step.classList.add('active'); mCurrentStep = n; }
+    updateProgress(n);
+  }
+
+  function handleAnswer(field, value, nextStep, el) {
+    mData[field] = value;
+    el.closest('.m-options').querySelectorAll('.m-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    setTimeout(() => goToStep(nextStep), 180);
+  }
+
+  function advanceFromAddress() {
+    mData.address = document.getElementById('m-address').value.trim();
+    goToStep(6);
+  }
+
+  function submitModalForm() {
+    mData.name = document.getElementById('m-name').value.trim();
+    mData.email = document.getElementById('m-email').value.trim();
+    mData.phone = document.getElementById('m-phone').value.trim();
+    mData.submittedAt = new Date().toISOString();
+    // CRM-ready payload — wire to GHL/HubSpot/Salesforce webhook here:
+    // fetch('/api/leads', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(mData) });
+    console.log('[VOLTLINE Lead]', JSON.stringify(mData, null, 2));
+    document.querySelectorAll('.m-step').forEach(s => s.classList.remove('active'));
+    updateProgress(M_TOTAL + 1);
+    document.getElementById('m-confirm').classList.add('active');
+  }
+
+  function updateProgress(step) {
+    const bar = document.getElementById('m-progress');
+    const counter = document.getElementById('m-step-count');
+    if (!bar) return;
+    bar.innerHTML = '';
+    for (let i = 1; i <= M_TOTAL; i++) {
+      const seg = document.createElement('div');
+      seg.className = 'm-progress-seg' + (i < step ? ' done' : '') + (i === step ? ' active' : '');
+      bar.appendChild(seg);
+    }
+    if (counter) counter.textContent = String(Math.min(step, M_TOTAL)).padStart(2,'0') + ' / ' + String(M_TOTAL).padStart(2,'0');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function toggleFAQ(btn) {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  const trackFill = document.getElementById('track-fill');
+  const nodes = [1,2,3,4].map(i => document.getElementById('node-'+i));
+  const po = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      setTimeout(() => { if (trackFill) trackFill.style.width = '75%'; }, 300);
+      nodes.forEach((n, i) => setTimeout(() => n && n.classList.add('lit'), 350 + i * 280));
+      po.disconnect();
+    }
+  }, { threshold: 0.25 });
+  const tw = document.getElementById('track-wrap');
+  if (tw) po.observe(tw);
+</script>
+</body>
+</html>
