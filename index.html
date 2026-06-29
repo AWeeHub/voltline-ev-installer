@@ -380,6 +380,12 @@
     @media (max-width: 1080px) {
       .quote-inner { grid-template-columns: 1fr; gap: 48px; }
     }
+    @media (max-width: 1024px) {
+      .svc-grid   { grid-template-columns: repeat(2, 1fr); }
+      .testi-grid { grid-template-columns: repeat(2, 1fr); }
+      .svc-card:nth-child(2n)  { border-right: none; }
+      .tcard:nth-child(2n)     { border-right: none; }
+    }
     @media (max-width: 960px) {
       #nav { padding: 16px 24px; }
       #nav.scrolled { padding: 13px 24px; }
