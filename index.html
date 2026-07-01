@@ -218,7 +218,7 @@
     #process { padding: 120px 56px; background: #F4F2ED; }
     .track-outer { max-width: 1200px; margin: 0 auto; position: relative; }
     .track-line { position: absolute; top: 18px; left: 12.5%; right: 12.5%; height: 1px; background: rgba(0,0,0,0.1); }
-    .track-fill { position: absolute; top: 18px; left: 12.5%; height: 1px; background: #0B0B0C; width: 0; transition: width 1.4s cubic-bezier(0.16,1,0.3,1); }
+    .track-fill { position: absolute; top: 18px; left: 12.5%; width: 75%; height: 1px; background: #0B0B0C; transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(0.16,1,0.3,1); }
     .track-wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; position: relative; z-index: 1; }
     .step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 12px; }
     .step-node {
@@ -1090,7 +1090,7 @@
   const nodes = [1,2,3,4].map(i => document.getElementById('node-'+i));
   const po = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting) {
-      setTimeout(() => { if (trackFill) trackFill.style.width = '75%'; }, 300);
+      setTimeout(() => { if (trackFill) trackFill.style.transform = 'scaleX(1)'; }, 300);
       nodes.forEach((n, i) => setTimeout(() => n && n.classList.add('lit'), 350 + i * 280));
       po.disconnect();
     }
